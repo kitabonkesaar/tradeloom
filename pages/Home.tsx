@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import {
   ArrowRight,
@@ -182,7 +181,7 @@ const Home = () => {
                     { step: '02', title: 'Download', desc: 'Get the .ex5 binary.', icon: Layers },
                     { step: '03', title: 'Deploy', desc: 'Install on MT5.', icon: Cpu },
                     { step: '04', title: 'Execute', desc: 'Activate AutoTrading.', icon: Zap }
-                 ].map((item, index) => (
+                 ].map((item) => (
                      <div key={item.step} className="relative z-10 group">
                          <div className="w-24 h-24 mx-auto bg-white border border-gray-200 rounded-2xl flex items-center justify-center mb-8 group-hover:border-primary group-hover:shadow-lg transition-all duration-300 relative">
                              <item.icon className="w-8 h-8 text-black group-hover:text-primary transition-colors" />

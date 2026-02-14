@@ -1,7 +1,6 @@
-import React from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { PERFORMANCE_DATA } from '../constants';
-import { ArrowUpRight, TrendingUp, Clock, Activity } from 'lucide-react';
+import { TrendingUp, Clock, Activity } from 'lucide-react';
 
 const Performance = () => {
   const currentROI = 145.2;

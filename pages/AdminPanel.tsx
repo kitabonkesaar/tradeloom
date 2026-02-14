@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useData } from '../DataContext';
-import { Routes, Route, Link, useLocation, Navigate } from 'react-router-dom';
+import { Routes, Route, Link, useLocation } from 'react-router-dom';
 import { 
-  Users, Key, Shield, ShieldCheck, LayoutDashboard, Menu, X, Check, XCircle, Trash2, Search, CreditCard
+  Users, Key, Shield, ShieldCheck, LayoutDashboard, Menu, X, Check, XCircle, Trash2, CreditCard
 } from 'lucide-react';
 import { License } from '../types';
 

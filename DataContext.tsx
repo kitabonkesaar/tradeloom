@@ -27,7 +27,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [users, setUsers] = useState<User[]>(MOCK_USERS);
   const [licenses, setLicenses] = useState<License[]>(MOCK_LICENSES);
   const [payments, setPayments] = useState<Payment[]>(MOCK_PAYMENTS);
-  const [tickets, setTickets] = useState<SupportTicket[]>(MOCK_TICKETS);
+  const [tickets] = useState<SupportTicket[]>(MOCK_TICKETS);
 
   const addUser = (user: User) => setUsers(prev => [...prev, user]);
   

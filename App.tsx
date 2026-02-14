@@ -10,14 +10,6 @@ import Dashboard from './pages/Dashboard';
 import Login from './pages/Login';
 import AdminPanel from './pages/AdminPanel';
 
-// --- Auth Component (Logic Wrapper) ---
-// We need a component to use the hook inside the provider
-const AuthWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    // Auth Logic is simpler here, handled by Navbar/Login pages via localStorage primarily
-    // but synchronized with DataContext for persistence
-    return <>{children}</>;
-};
-
 // --- Context for Auth ---
 interface AuthContextType {
   user: User | null;
@@ -75,8 +67,6 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user, logout } = useAuth();
   const location = useLocation();
-
-  const isDashboard = location.pathname.startsWith('/dashboard') || location.pathname.startsWith('/admin');
 
   return (
     <nav className="bg-white border-b border-gray-100 sticky top-0 z-50">
