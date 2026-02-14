@@ -81,10 +81,14 @@ const Navbar = () => {
   return (
     <nav className="bg-white border-b border-gray-100 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
+        <div className="flex justify-between h-20">
           <div className="flex">
             <Link to="/" className="flex-shrink-0 flex items-center">
-              <span className="text-2xl font-bold text-black tracking-tighter">TRADE<span className="text-primary">LOOM</span></span>
+              <img 
+                src="https://i.postimg.cc/Y0yPNN5S/IMG-8587.png" 
+                alt="TRADELOOM INNOVATIONS" 
+                className="h-14 w-auto object-contain" 
+              />
             </Link>
             <div className="hidden md:ml-6 md:flex md:space-x-8">
               <Link to="/" className={`${location.pathname === '/' ? 'border-primary text-black' : 'border-transparent text-gray-500 hover:text-black'} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors`}>
@@ -172,7 +176,9 @@ const Footer = () => (
     <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
         <div className="col-span-1 md:col-span-2">
-          <span className="text-2xl font-bold tracking-tighter">TRADE<span className="text-primary">LOOM</span></span>
+          <div className="bg-white inline-block p-2 rounded-lg mb-4">
+             <img src="https://i.postimg.cc/Y0yPNN5S/IMG-8587.png" alt="TRADELOOM INNOVATIONS" className="h-10 w-auto" />
+          </div>
           <p className="mt-4 text-gray-400 max-w-sm">
             Providing institutional-grade algorithmic trading solutions for retail investors. Automate your strategy, scale your profits.
           </p>

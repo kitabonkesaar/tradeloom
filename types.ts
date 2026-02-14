@@ -39,10 +39,3 @@ export interface SupportTicket {
   status: 'open' | 'resolved' | 'closed';
   date: string;
 }
-
-export interface InvestorRequest {
-  id: string;
-  email: string;
-  status: 'pending' | 'sent';
-  date: string;
-}

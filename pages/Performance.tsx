@@ -1,36 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { PERFORMANCE_DATA } from '../constants';
-import { useData } from '../DataContext';
-import { ArrowUpRight, TrendingUp, Clock, Activity, CheckCircle } from 'lucide-react';
+import { ArrowUpRight, TrendingUp, Clock, Activity } from 'lucide-react';
 
 const Performance = () => {
   const currentROI = 145.2;
   const drawdown = 8.5;
   const winRate = 68;
-  const { addInvestorRequest } = useData();
-  
-  const [email, setEmail] = useState('');
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleInvestorRequest = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    
-    // Simulate API delay
-    setTimeout(() => {
-        addInvestorRequest({
-            id: Date.now().toString(),
-            email: email,
-            status: 'pending',
-            date: new Date().toISOString().split('T')[0]
-        });
-        setIsLoading(false);
-        setIsSubmitted(true);
-        setEmail('');
-    }, 1500);
-  };
 
   return (
     <div className="py-12 bg-white min-h-screen">
@@ -159,46 +135,19 @@ const Performance = () => {
             </div>
           </div>
           <div className="relative flex items-center p-6 lg:p-10">
-              {isSubmitted ? (
-                 <div className="w-full bg-white p-8 rounded-lg text-center h-64 flex flex-col items-center justify-center">
-                    <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 mb-6">
-                        <CheckCircle className="h-8 w-8 text-green-600" />
-                    </div>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-2">Request Received!</h3>
-                    <p className="text-gray-500">
-                        We have received your request. An email with the Investor ID and Password will be sent to you shortly after admin approval.
-                    </p>
-                    <button onClick={() => setIsSubmitted(false)} className="mt-6 text-primary hover:text-primary-hover font-medium">
-                        Send another request
-                    </button>
-                 </div>
-              ) : (
-                <form className="w-full bg-white p-6 rounded-lg" onSubmit={handleInvestorRequest}>
-                    <h3 className="text-lg font-medium text-gray-900 mb-4">Request Access</h3>
-                    <div className="space-y-4">
-                        <div>
-                            <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email Address</label>
-                            <input 
-                                type="email" 
-                                id="email" 
-                                required 
-                                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm" 
-                                placeholder="you@example.com"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                            />
-                        </div>
-                        <button 
-                            type="submit" 
-                            disabled={isLoading}
-                            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 transition-colors"
-                        >
-                            {isLoading ? 'Sending...' : 'Send Investor ID'}
-                        </button>
-                        <p className="text-xs text-gray-500 text-center">We respect your privacy. No spam.</p>
-                    </div>
-                </form>
-              )}
+              <form className="w-full bg-white p-6 rounded-lg" onSubmit={(e) => { e.preventDefault(); alert('Investor details sent to your email!'); }}>
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">Request Access</h3>
+                  <div className="space-y-4">
+                      <div>
+                          <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email Address</label>
+                          <input type="email" id="email" required className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm" placeholder="you@example.com" />
+                      </div>
+                      <button type="submit" className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+                          Send Investor ID
+                      </button>
+                      <p className="text-xs text-gray-500 text-center">We respect your privacy. No spam.</p>
+                  </div>
+              </form>
           </div>
         </div>
       </div>

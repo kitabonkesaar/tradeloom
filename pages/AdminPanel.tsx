@@ -2,16 +2,15 @@ import React, { useState } from 'react';
 import { useData } from '../DataContext';
 import { Routes, Route, Link, useLocation, Navigate } from 'react-router-dom';
 import { 
-  Users, Key, Shield, ShieldCheck, LayoutDashboard, Menu, X, Check, XCircle, Trash2, Search, CreditCard, Lock, Send
+  Users, Key, Shield, ShieldCheck, LayoutDashboard, Menu, X, Check, XCircle, Trash2, Search, CreditCard
 } from 'lucide-react';
-import { License, InvestorRequest } from '../types';
+import { License } from '../types';
 
 const AdminSidebar = ({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: (val: boolean) => void }) => {
   const location = useLocation();
   const links = [
     { name: 'Overview', path: '/admin', icon: LayoutDashboard },
     { name: 'License Management', path: '/admin/licenses', icon: Key },
-    { name: 'Investor Requests', path: '/admin/investor-requests', icon: Lock },
     { name: 'Users', path: '/admin/users', icon: Users },
     { name: 'Payments', path: '/admin/payments', icon: CreditCard },
   ];
@@ -25,7 +24,9 @@ const AdminSidebar = ({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: (val:
 
       <div className={`fixed inset-y-0 left-0 z-30 w-64 bg-slate-900 border-r border-slate-800 transform transition-transform lg:translate-x-0 lg:static lg:inset-auto lg:h-auto ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <div className="flex items-center justify-between h-16 px-6 border-b border-slate-800">
-          <span className="text-xl font-bold text-white tracking-tighter">ADMIN<span className="text-primary">PANEL</span></span>
+          <div className="bg-white rounded p-1">
+             <img src="https://i.postimg.cc/Y0yPNN5S/IMG-8587.png" alt="TRADELOOM" className="h-8 w-auto" />
+          </div>
           <button onClick={() => setIsOpen(false)} className="lg:hidden">
             <X className="h-6 w-6 text-gray-400" />
           </button>
@@ -53,11 +54,11 @@ const AdminSidebar = ({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: (val:
 };
 
 const AdminOverview = () => {
-  const { users, licenses, payments, investorRequests } = useData();
+  const { users, licenses, payments } = useData();
   
   const totalRevenue = payments.reduce((acc, curr) => acc + curr.amount, 0);
   const pendingLicenses = licenses.filter(l => l.status === 'pending').length;
-  const pendingInvestorRequests = investorRequests.filter(r => r.status === 'pending').length;
+  const activeLicenses = licenses.filter(l => l.status === 'active').length;
 
   return (
     <div className="space-y-6">
@@ -71,9 +72,9 @@ const AdminOverview = () => {
             <dt className="text-sm font-medium text-gray-500 truncate">Pending Approvals</dt>
             <dd className="mt-1 text-3xl font-bold text-gray-900">{pendingLicenses}</dd>
         </div>
-         <div className="bg-white overflow-hidden shadow rounded-lg border-l-4 border-purple-400 p-5">
-            <dt className="text-sm font-medium text-gray-500 truncate">Investor Requests</dt>
-            <dd className="mt-1 text-3xl font-bold text-gray-900">{pendingInvestorRequests}</dd>
+         <div className="bg-white overflow-hidden shadow rounded-lg border-l-4 border-green-400 p-5">
+            <dt className="text-sm font-medium text-gray-500 truncate">Active Licenses</dt>
+            <dd className="mt-1 text-3xl font-bold text-gray-900">{activeLicenses}</dd>
         </div>
          <div className="bg-white overflow-hidden shadow rounded-lg border-l-4 border-blue-400 p-5">
             <dt className="text-sm font-medium text-gray-500 truncate">Total Users</dt>
@@ -285,156 +286,6 @@ const LicenseManagement = () => {
   );
 };
 
-const InvestorRequestsManagement = () => {
-  const { investorRequests, resolveInvestorRequest } = useData();
-  const [selectedReq, setSelectedReq] = useState<InvestorRequest | null>(null);
-  const [investorId, setInvestorId] = useState('');
-  const [investorPass, setInvestorPass] = useState('');
-
-  const pendingRequests = investorRequests.filter(r => r.status === 'pending');
-  const sentRequests = investorRequests.filter(r => r.status === 'sent');
-
-  const openSendModal = (req: InvestorRequest) => {
-    setSelectedReq(req);
-    setInvestorId('');
-    setInvestorPass('');
-  };
-
-  const closeSendModal = () => {
-    setSelectedReq(null);
-  };
-
-  const handleSendCredentials = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (selectedReq && investorId && investorPass) {
-      resolveInvestorRequest(selectedReq.id);
-      // Simulate Email Sending
-      alert(`Email sent successfully to ${selectedReq.email}!\n\nInvestor ID: ${investorId}\nPassword: ${investorPass}`);
-      closeSendModal();
-    }
-  };
-
-  return (
-    <div className="space-y-6">
-       <h1 className="text-2xl font-bold text-gray-900">Investor Access Requests</h1>
-       
-       <div className="bg-white shadow overflow-hidden sm:rounded-lg border border-gray-100">
-         <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
-            <h3 className="text-lg leading-6 font-medium text-gray-900">Pending Requests</h3>
-         </div>
-         <ul className="divide-y divide-gray-200">
-            {pendingRequests.map((req) => (
-                <li key={req.id} className="px-4 py-4 sm:px-6 flex items-center justify-between hover:bg-gray-50">
-                    <div>
-                        <p className="text-sm font-medium text-primary">{req.email}</p>
-                        <p className="text-xs text-gray-500">Requested: {req.date}</p>
-                    </div>
-                    <button 
-                        onClick={() => openSendModal(req)}
-                        className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 shadow-sm"
-                    >
-                        <Send className="w-3 h-3 mr-1" /> Send Creds
-                    </button>
-                </li>
-            ))}
-            {pendingRequests.length === 0 && (
-                <li className="px-4 py-8 text-center text-sm text-gray-500">No pending requests.</li>
-            )}
-         </ul>
-       </div>
-
-       <div className="bg-gray-50 shadow overflow-hidden sm:rounded-lg border border-gray-200 opacity-75">
-         <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
-            <h3 className="text-lg leading-6 font-medium text-gray-700">History (Sent)</h3>
-         </div>
-         <ul className="divide-y divide-gray-200">
-            {sentRequests.map((req) => (
-                <li key={req.id} className="px-4 py-4 sm:px-6 flex items-center justify-between">
-                    <div>
-                        <p className="text-sm font-medium text-gray-600">{req.email}</p>
-                        <p className="text-xs text-gray-400">Date: {req.date}</p>
-                    </div>
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                        SENT
-                    </span>
-                </li>
-            ))}
-         </ul>
-       </div>
-
-       {/* Send Credentials Modal */}
-       {selectedReq && (
-        <div className="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-            <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-                <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity backdrop-blur-sm" onClick={closeSendModal}></div>
-                <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-                <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-                    <form onSubmit={handleSendCredentials}>
-                        <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                            <div className="sm:flex sm:items-start">
-                                <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-indigo-100 sm:mx-0 sm:h-10 sm:w-10">
-                                    <Lock className="h-6 w-6 text-indigo-600" />
-                                </div>
-                                <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
-                                    <h3 className="text-lg leading-6 font-medium text-gray-900">
-                                        Send Investor Credentials
-                                    </h3>
-                                    <div className="mt-2">
-                                        <p className="text-sm text-gray-500 mb-4">
-                                            Enter the Investor Login ID and Password to send to <strong>{selectedReq.email}</strong>.
-                                        </p>
-                                        <div className="space-y-4">
-                                            <div>
-                                                <label className="block text-sm font-medium text-gray-700">Investor ID (Login)</label>
-                                                <input
-                                                    type="text"
-                                                    required
-                                                    className="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md border p-2 focus:ring-primary focus:border-primary"
-                                                    value={investorId}
-                                                    onChange={(e) => setInvestorId(e.target.value)}
-                                                    placeholder="e.g. 8829102"
-                                                />
-                                            </div>
-                                            <div>
-                                                <label className="block text-sm font-medium text-gray-700">Investor Password</label>
-                                                <input
-                                                    type="text"
-                                                    required
-                                                    className="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md border p-2 focus:ring-primary focus:border-primary"
-                                                    value={investorPass}
-                                                    onChange={(e) => setInvestorPass(e.target.value)}
-                                                    placeholder="e.g. inv_Pass123"
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                            <button
-                                type="submit"
-                                className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm"
-                            >
-                                Send Email
-                            </button>
-                            <button
-                                type="button"
-                                className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-                                onClick={closeSendModal}
-                            >
-                                Cancel
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-       )}
-    </div>
-  );
-};
-
 const UserManagement = () => {
     const { users } = useData();
     return (
@@ -488,7 +339,6 @@ const AdminPanel = () => {
           <Routes>
             <Route path="/" element={<AdminOverview />} />
             <Route path="/licenses" element={<LicenseManagement />} />
-            <Route path="/investor-requests" element={<InvestorRequestsManagement />} />
             <Route path="/users" element={<UserManagement />} />
             <Route path="/payments" element={<div className="text-gray-500">Payment history table placeholder</div>} />
           </Routes>
